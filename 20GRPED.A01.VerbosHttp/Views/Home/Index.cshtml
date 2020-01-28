@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<form action="https://localhost:44378/home/OnFormGet" method="get">
+    <input name="arg" id="actionget" type="text" />
+
+    <button>Enviar Get!</button>
+</form>
+
+<form asp-action="OnFormGet" method="get">
+    <input name="arg" id="aspactionget" type="text" />
+
+    <button>Enviar asp-action get!</button>
+</form>
+
+<form action="https://localhost:44378/home/OnFormPost" method="post">
+    <input name="arg" id="actionpost" type="text" />
+
+    <button>Enviar post!</button>
+</form>
+
+<form asp-action="OnFormPost" method="post">
+    <input name="arg" id="aspasctionpost" type="text" />
+
+    <button>Enviar asp-action post!</button>
+</form>
+
+@*Pq não tem form com put e delete?*@
+@*https://softwareengineering.stackexchange.com/questions/114156/why-are-there-are-no-put-and-delete-methods-on-html-forms*@
+
+<form id="fetchForm">
+    <input name="arg" id="fetchInput" type="text" />
+</form>
+
+<button id="fetchButtonGet">Enviar fetchButtonGet!</button>
+<button id="fetchButtonPost">Enviar fetchButtonPost!</button>
+<button id="fetchButtonPut">Enviar fetchButtonPut!</button>
+<button id="fetchButtonDelete">Enviar fetchButtonDelete!</button>
+
+<script>
+    const fetchForm = document.getElementById("fetchForm");
+
+    const fetchButtonPut = document.getElementById("fetchButtonPut");
+    fetchButtonPut.onclick = () => {
+        fetch("Home/OnFetch", { method: "put", body: new FormData(fetchForm) })
+            .then(response => response.text())
+            .then(response => alert(response));
+    };
+
+    const fetchButtonDelete = document.getElementById("fetchButtonDelete");
+    fetchButtonDelete.onclick = () => {
+        fetch("Home/OnFetch", { method: "delete", body: new FormData(fetchForm) })
+            .then(response => response.text())
+            .then(response =>
+                alert(response));
+    };
+
+    const fetchButtonGet = document.getElementById("fetchButtonGet");
+    fetchButtonGet.onclick = () => {
+        const params = new URLSearchParams();
+        for(let param of new FormData(fetchForm))
+        {
+            params.append(param[0], param[1]);
+        }
+
+        fetch("Home/OnFetch?" + params, { method: "get" })
+            .then(response => response.text())
+            .then(response =>
+                alert(response));
+    };
+
+    const fetchButtonPost = document.getElementById("fetchButtonPost");
+    fetchButtonPost.onclick = () => {
+        fetch("Home/OnFetch",
+                {
+                    method: "post",
+                    body: new FormData(fetchForm)
+                })
+            .then(response => response.text())
+            .then(response =>
+                alert(response));
+    };
+
+</script>
